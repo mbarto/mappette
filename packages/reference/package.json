@@ -1,7 +1,7 @@
 {
-    "name": "@mappette/maplibre-gl",
+    "name": "@mappette/reference",
     "version": "0.1.0",
-    "description": "Mappette MapLibre-GL API package",
+    "description": "Mappette Reference package",
     "author": "Mauro Bartolomeoli <maurobartolomeoli@gmail.com>",
     "homepage": "",
     "license": "ISC",
@@ -19,12 +19,6 @@
         "test": "jest",
         "test:watch": "jest --watch"
     },
-    "dependencies": {
-        "@mappette/core": "0.1.0",
-        "@mappette/reference": "0.1.0",
-        "@types/maplibre-gl": "^1.13.0",
-        "maplibre-gl": "^1.13.0-rc.4"
-    },
     "devDependencies": {
         "@types/jest": "^26.0.15",
         "jest": "^26.6.3",
@@ -32,5 +26,8 @@
         "rimraf": "^3.0.2",
         "ts-jest": "^26.4.4",
         "typescript": "^4.1.2"
+    },
+    "dependencies": {
+        "fp-ts": "^2.9.3"
     }
 }

@@ -1,5 +1,9 @@
-import { MapApi, Center, EPSG_4326, Layer, Resolution } from "@mappette/core"
-import { MapEventType } from "@mappette/core/lib/api"
+import { MapApi, Center, Layer, Resolution, MapView } from "@mappette/core"
+import {
+    MapEventListener,
+    MapEventType,
+    MapEventViewChanged,
+} from "@mappette/core/lib/api"
 import {
     AnyLayer,
     LngLat,
@@ -7,17 +11,13 @@ import {
     MapEventType as MapLibreEventType,
     MapboxEvent,
 } from "maplibre-gl"
+import { latitude, longitude } from "@mappette/reference/lib/defs/epsg4326"
 
 const EQUATOR_LENGTH = 40075.016686 * 1000
 const ZOOM_ZERO_RESOLUTION = EQUATOR_LENGTH / 256.0
 
 function getCenter(c: Center): LngLat {
-    switch (c.crs.id) {
-        case EPSG_4326.id:
-            return new LngLat(c.x, c.y)
-        default:
-            throw new Error(`Unsupported crs: ${c.crs}`)
-    }
+    return new LngLat(c.x, c.y)
 }
 
 function getZoom(r: Resolution): number {
@@ -82,6 +82,21 @@ function apiToMapLibre(evt: keyof MapEventType): LibraryEventType[] {
     }
 }
 
+function fireViewChanged(
+    map: MapLibreMap,
+    listener: MapEventListener<MapEventViewChanged>,
+) {
+    listener({
+        type: "viewchanged",
+        center: {
+            x: longitude(map.getCenter().lng),
+            y: latitude(map.getCenter().lat),
+            crs: "EPSG:4326",
+        },
+        resolution: getResolution(map.getZoom()),
+    })
+}
+
 const api: MapApi = {
     create: (config, container) => {
         const { center, resolution, layers } = config
@@ -106,18 +121,13 @@ const api: MapApi = {
                 }
             },
             on(evt, listener) {
+                if (evt === "viewchanged") {
+                    fireViewChanged(map, listener)
+                }
                 const apiListener = (e: MapboxEvent) => {
                     switch (evt) {
                         case "viewchanged":
-                            listener({
-                                type: "viewchanged",
-                                center: {
-                                    x: map.getCenter().lng,
-                                    y: map.getCenter().lat,
-                                    crs: EPSG_4326,
-                                },
-                                resolution: getResolution(map.getZoom()),
-                            })
+                            fireViewChanged(map, listener)
                             break
                         default:
                             throw new Error(

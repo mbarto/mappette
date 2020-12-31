@@ -1,4 +1,4 @@
-import { Center, Resolution } from "../map/view"
+import { Center, Resolution, MapView } from "../map/view"
 import { Map as MapConfig } from "../map"
 
 export type MapContainer = string

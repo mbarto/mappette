@@ -1,14 +1,15 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import App from "./app"
-import { EPSG_4326, Map as MapConfig } from "@mappette/core"
+import { Map as MapConfig } from "@mappette/core"
+import { longitude, latitude } from "@mappette/reference/lib/defs/epsg4326"
 import api from "@mappette/maplibre-gl"
 
 const map: MapConfig = {
     center: {
-        x: 10,
-        y: 43,
-        crs: EPSG_4326,
+        x: longitude(10),
+        y: latitude(43),
+        crs: "EPSG:4326",
     },
     resolution: 78000,
     layers: [
