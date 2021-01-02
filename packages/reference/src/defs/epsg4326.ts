@@ -11,6 +11,16 @@ export type EPSG_4326 = CoordinateReferenceSystem & {
     }
 }
 
+export const EPSG_4326_DEF: EPSG_4326 = {
+    id: "EPSG:4326",
+    extent: {
+        minX: -180,
+        minY: -90,
+        maxX: 180,
+        maxY: 90,
+    },
+}
+
 export type Longitude = Range<
     EPSG_4326["extent"]["minX"],
     EPSG_4326["extent"]["maxX"]

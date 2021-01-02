@@ -1,5 +1,5 @@
 import { Range } from "./range"
-import { CoordinateReferenceSystems } from "./defs"
+import { CoordinateReferenceSystems, x as buildX, y as buildY } from "./defs"
 
 export type Point2D = {
     x: number
@@ -36,4 +36,16 @@ export type ReferencedPoint2D<T extends CoordinateReferenceSystemId> = {
         CoordinateReferenceSystems[T]["extent"]["minY"],
         CoordinateReferenceSystems[T]["extent"]["maxY"]
     >
+}
+
+export function point2D<T extends CoordinateReferenceSystemId>(
+    x: number,
+    y: number,
+    crs: T,
+): ReferencedPoint2D<T> {
+    return {
+        x: buildX(x, crs),
+        y: buildY(y, crs),
+        crs,
+    }
 }
